@@ -13,12 +13,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Vulkan SDK
-        id: vulkan
-        uses: humbletim/install-vulkan-sdk@v1.2
+      - name: Setup Vulkan Headers and Loader
+        uses: humbletim/setup-vulkan-sdk@v1
         with:
-          version: latest
-          cache: true
+          version: 1.4.304.1
 
       - name: Compile shaders
         shell: pwsh
