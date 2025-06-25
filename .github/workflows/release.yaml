@@ -14,6 +14,7 @@ jobs:
           submodules: recursive
 
       - name: Install Vulkan SDK
+        id: vulkan
         uses: humbletim/install-vulkan-sdk@v1.2
         with:
           version: latest
