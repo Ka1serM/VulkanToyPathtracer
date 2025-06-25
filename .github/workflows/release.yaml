@@ -13,12 +13,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Vulkan SDK (LunarG)
-        id: vulkan
-        uses: TWoolhouse/setup-vulkan-sdk@v1.1.0
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.2
         with:
           version: latest
-          arch: x64
+          cache: true
 
       - name: Download niXman MinGW GCC 15.1 Posix SEH UCRT
         shell: pwsh
