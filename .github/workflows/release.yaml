@@ -13,21 +13,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Download and install full Vulkan SDK
-        shell: pwsh
-        run: |
-          $version = "1.4.309.0"
-          $url = "https://sdk.lunarg.com/sdk/download/$version/windows/vulkan-sdk-$version-setup.exe"
-          Invoke-WebRequest -Uri $url -OutFile "vulkan-sdk-setup.exe"
-          Start-Process -FilePath ".\vulkan-sdk-setup.exe" -ArgumentList "/S" -Wait
-
-          # Set environment variable for Vulkan SDK path
-          $env:VULKAN_SDK = "C:\VulkanSDK\$version"
-          [Environment]::SetEnvironmentVariable("VULKAN_SDK", $env:VULKAN_SDK, "User")
-
-          # Add Vulkan SDK bin to PATH
-          $newPath = "$env:VULKAN_SDK\Bin;" + $env:PATH
-          [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+      - name: Install Vulkan SDK
+        uses: jakoch/install-vulkan-sdk-action@v1
+        with:
+          install_runtime: true
+          cache: true
+          stripdown: true
 
       - name: Verify Vulkan SDK Environment
         shell: pwsh
