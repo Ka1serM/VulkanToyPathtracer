@@ -1,4 +1,5 @@
 ﻿#include "HdrToLdrCompute.h"
+#include <iostream>
 #include "Utils.h"
 
 HdrToLdrCompute::HdrToLdrCompute(Context& context, uint32_t width, uint32_t height, vk::ImageView inputImageView)
@@ -32,16 +33,9 @@ HdrToLdrCompute::HdrToLdrCompute(Context& context, uint32_t width, uint32_t heig
 
     // Descriptor pool
     std::vector<vk::DescriptorPoolSize> poolSizes = {{vk::DescriptorType::eStorageImage, 2}};
-
-    descriptorPool = context.device.get().createDescriptorPoolUnique({
-        vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet,
-        1,
-        static_cast<uint32_t>(poolSizes.size()),
-        poolSizes.data()
-    });
-
+    
     // Allocate descriptor set (store as UniqueDescriptorSet)
-    vk::DescriptorSetAllocateInfo allocInfo(descriptorPool.get(), 1, &descriptorSetLayout.get());
+    vk::DescriptorSetAllocateInfo allocInfo(context.descriptorPool.get(), 1, &descriptorSetLayout.get());
     auto descriptorSets = context.device.get().allocateDescriptorSetsUnique(allocInfo);
     descriptorSet = std::move(descriptorSets.front()); // descriptorSet is vk::UniqueDescriptorSet
 
@@ -68,6 +62,11 @@ HdrToLdrCompute::HdrToLdrCompute(Context& context, uint32_t width, uint32_t heig
     };
 
     context.device.get().updateDescriptorSets(writes, {});
+}
+
+HdrToLdrCompute::~HdrToLdrCompute()
+{
+    std::cout << "Destroying HdrToLdrCompute" << std::endl;
 }
 
 void HdrToLdrCompute::dispatch(vk::CommandBuffer commandBuffer, uint32_t x, uint32_t y, uint32_t z) {
